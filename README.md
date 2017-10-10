@@ -1,11 +1,12 @@
-#Auto deploy project through GIT
+Auto deploy project through GIT
+===========
 
-##Requirements
+#Requirements
 
 1. PHP server
 2. Access to perform **shell** commands
 
-##Start to use
+#Start to use
 
 Change config in file "**bitbucket-webhook.php**":
 
@@ -16,7 +17,7 @@ Change config in file "**bitbucket-webhook.php**":
 Send "**GET**" request to file bitbucket-webhook.php with "**key**" from your config. 
 It is perform command ``"git pull"``. 
 
-##Example to use
+#Example to use
 
 1. Suppose we have project "example" available from domain "example.com".
 2. Put directory "auto-deploy" into "example".
