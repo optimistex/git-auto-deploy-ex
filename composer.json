@@ -22,10 +22,7 @@
   "autoload": {
     "classmap": [
       "shell_lib.php"
-    ],
-    "psr-4": {
-      "optimistex\\deploy\\": ""
-    }
+    ]
   },
   "require": {}
 }
