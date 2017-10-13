@@ -1,0 +1,11 @@
+{
+    "name": "optimistex/auto-deploy",
+    "description": "The little project for auto-deploying projects to a hosting",
+    "authors": [
+        {
+            "name": "optimistex",
+            "email": "optimistex@gmail.com"
+        }
+    ],
+    "require": {}
+}
