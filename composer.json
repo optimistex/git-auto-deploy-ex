@@ -1,11 +1,23 @@
 {
-    "name": "optimistex/auto-deploy",
-    "description": "The little project for auto-deploying projects to a hosting",
-    "authors": [
-        {
-            "name": "optimistex",
-            "email": "optimistex@gmail.com"
-        }
-    ],
-    "require": {}
+  "name": "optimistex/git-auto-deploy-ex",
+  "type": "library",
+  "description": "The little project for auto-deploying projects to a hosting",
+  "keywords": [
+    "auto",
+    "deploy",
+    "web hook",
+    "module"
+  ],
+  "homepage": "https://github.com/optimistex/auto-deploy",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/optimistex/auto-deploy/issues"
+  },
+  "authors": [
+    {
+      "name": "optimistex",
+      "email": "optimistex@gmail.com"
+    }
+  ],
+  "require": {}
 }
