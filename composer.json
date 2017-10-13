@@ -8,10 +8,10 @@
     "web hook",
     "module"
   ],
-  "homepage": "https://github.com/optimistex/auto-deploy",
+  "homepage": "https://github.com/optimistex/git-auto-deploy-ex",
   "license": "MIT",
   "support": {
-    "issues": "https://github.com/optimistex/auto-deploy/issues"
+    "issues": "https://github.com/optimistex/git-auto-deploy-ex/issues"
   },
   "authors": [
     {
