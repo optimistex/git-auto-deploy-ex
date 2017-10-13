@@ -6,6 +6,8 @@
  * Time: 17:09
  */
 
+namespace optimistex\deploy;
+
 /**
  * Class for executing shell commands
  *
@@ -100,6 +102,8 @@ class GitHelper
 
     public static function init($config)
     {
+        echo '\optimistex\deploy\GitHelper::init';
+
         // Conf
         static::$config = $config;
         LogHelper::init(static::$config['log_file']);

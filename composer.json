@@ -19,5 +19,13 @@
       "email": "optimistex@gmail.com"
     }
   ],
+  "autoload": {
+    "classmap": [
+      "shell_lib.php"
+    ],
+    "psr-4": {
+      "optimistex\\deploy\\": ""
+    }
+  },
   "require": {}
 }
