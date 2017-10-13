@@ -138,8 +138,8 @@ class GitHelper
         LogHelper::init(static::$config['log_file']);
 
         // Run
-        LogHelper::log('SESSION START');
         if (static::git_check_access()) {
+            LogHelper::log('SESSION START');
             LogHelper::log(ShellHelper::exec([
                 'cd ' . static::$config['project_root'],
                 'git branch',
