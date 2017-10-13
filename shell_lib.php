@@ -22,10 +22,19 @@ namespace optimistex\deploy;
  */
 class ShellHelper
 {
-    public static function exec($commands)
+    public static function exec(array $commands)
     {
-        $line = implode('; ', $commands);
-        return "$ $line \n" . shell_exec($line);
+        $res = "Executing shell commands:\n";
+        foreach ($commands as $command) {
+            $response = [];
+            exec($command . ' 2>&1', $response, $error_code);
+            if ($error_code > 0 && empty($response)) {
+                $response = array('Error');
+            }
+            $response = implode("\n", $response);
+            $res .= "$ $command \n{$response}\n" . ($response ? "\n" : '');
+        }
+        return $res;
     }
 }
 
@@ -100,10 +109,30 @@ class GitHelper
      */
     static $config;
 
+    /**
+     * @param string $key unique key for protect deploying
+     * @param string $project_root path to the project of git
+     * @param string $log_file path to log-file
+     */
+    public static function run($key, $project_root = '.', $log_file = 'git-deploy-log.txt')
+    {
+        static::init([
+            'key' => $key,
+            'project_root' => $project_root,
+            'log_file' => $log_file,
+        ]);
+
+        if (file_exists($log_file)) {
+            echo '<h1>LOG </h1><pre>';
+            echo file_get_contents($log_file);
+            echo '</pre>';
+        } else {
+            echo 'log not found';
+        }
+    }
+
     public static function init($config)
     {
-        echo '\optimistex\deploy\GitHelper::init';
-
         // Conf
         static::$config = $config;
         LogHelper::init(static::$config['log_file']);
@@ -124,17 +153,17 @@ class GitHelper
     public static function end()
     {
         LogHelper::log('SESSION END');
-        exit;
     }
 
     public static function git_check_access()
     {
-        $access = !empty($_GET['key']) && static::$config['key'] === $_GET['key'];
-        if ($access) {
-            LogHelper::log('ACCESS');
-        } else {
-            LogHelper::log('DENY << ://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-            static::end();
+        if (isset($_GET['key']) && !empty($_GET['key'])) {
+            if (static::$config['key'] === $_GET['key']) {
+                LogHelper::log('ACCESS');
+            } else {
+                LogHelper::log('DENY << ://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                static::end();
+            }
         }
     }
 }
