@@ -139,15 +139,15 @@ class GitHelper
 
         // Run
         LogHelper::log('SESSION START');
-        static::git_check_access();
+        if (static::git_check_access()) {
+            LogHelper::log(ShellHelper::exec([
+                'cd ' . static::$config['project_root'],
+                'git branch',
+                'git pull',
+            ]));
 
-        LogHelper::log(ShellHelper::exec([
-            'cd ' . static::$config['project_root'],
-            'git branch',
-            'git pull',
-        ]));
-
-        static::end();
+            static::end();
+        }
     }
 
     public static function end()
@@ -160,10 +160,12 @@ class GitHelper
         if (isset($_GET['key']) && !empty($_GET['key'])) {
             if (static::$config['key'] === $_GET['key']) {
                 LogHelper::log('ACCESS');
+                return true;
             } else {
                 LogHelper::log('DENY << ://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
                 static::end();
             }
         }
+        return false;
     }
 }
