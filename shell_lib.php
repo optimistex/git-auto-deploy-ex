@@ -198,6 +198,7 @@ class DeployApplication
         $this->securityKey = $securityKey;
         $this->log_file = getcwd() . '/' . $log_file;
         chdir($project_root);
+        putenv("HOME=" . getcwd());
         LogHelper::init($this->log_file);
     }
 
