@@ -189,8 +189,19 @@ class GitHelper
  */
 class DeployApplication
 {
+    /**
+     * Private key for protection
+     * @var string
+     */
     private $securityKey;
+
+    /**
+     * Path to log file
+     * @var string
+     */
     private $log_file;
+
+    /** @var boolean */
     private $hasAccess;
 
     function __construct($securityKey, $project_root = '.', $log_file = 'git-deploy-log.txt')
