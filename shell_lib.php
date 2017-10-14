@@ -128,6 +128,10 @@ class DeployApplication
         LogHelper::init($this->log_file);
     }
 
+    /**
+     * Fastest executing for typical cases
+     * @param array $customCommands
+     */
     public function run(array $customCommands = [])
     {
         $this->begin();
