@@ -30,4 +30,28 @@ It does auto deploy your site to hosting
         
 4. Visit page ``http://your.domain/deploy.php`` for check log history        
         
-Do not forget to change the secret code ``ytJHvMHFdTYUryDhmJkjFjFiYk``         
+Do not forget to change the secret code ``ytJHvMHFdTYUryDhmJkjFjFiYk``
+         
+### Extended deploy with custom commands
+
+For extended deployment make the file ``deploy.php`` with code:
+
+```php
+<?php
+
+use optimistex\deploy\ShellHelper;
+use optimistex\deploy\DeployApplication;
+
+require_once 'vendor/autoload.php';
+
+$app = new DeployApplication('security_key');
+$app->begin();
+$app->execute([ // executing custom commands
+    'git branch',
+    'git pull',
+    ShellHelper::php() . ' composer.phar install', // install packages
+]);
+$app->end();
+```
+
+``ShellHelper::php()`` - equal ``php``, but used becouse just "php" not working! 
