@@ -82,4 +82,28 @@ class DeployApplicationTest extends TestCase
             $log
         );
     }
+
+    public function testKeyValidPhp()
+    {
+        $_GET['key'] = '123';
+        $_SERVER['HTTP_HOST'] = 'test.domain';
+        $app = new DeployApplication('123', '.', $this->fileName);
+
+        $this->assertFileNotExists($this->fileName);
+        $app->execute([
+            'echo testing_echo',
+            'php' => '-v'
+        ]);
+        $this->assertFileExists($this->fileName);
+        $log = file_get_contents($this->fileName);
+        $this->assertRegExp(
+            '/.+ACCESS IS OBTAINED.+' .
+            'Executing shell commands.+' .
+            '\$ echo testing_echo.+' .
+            'testing_echo.+' .
+            '\$ .*php -v.+' .
+            'php ' . PHP_VERSION . '.+/si',
+            $log
+        );
+    }
 }

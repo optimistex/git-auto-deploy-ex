@@ -13,7 +13,15 @@ namespace optimistex\deploy;
  * Example for use it:
  *
  * ```php
+ * // Run default commands
  * (new DeployApplication('security_key'))->run();
+ *
+ * // Run custom commands
+ * (new DeployApplication('security_key'))->run([
+ *      'echo Hello!',   // equal: $ echo Hello!
+ *      'php' => '-v'    // equal: $ php -v ()
+ * ]);
+ * // for running "php" used key cause just "php" not working!
  * ```
  *
  * @package optimistex\deploy
@@ -95,7 +103,7 @@ class DeployApplication
      * Returning an absolute path to "php". It is useful, cause just "php" not working!
      * @return string
      */
-    public function php()
+    public function php(): string
     {
         if (defined('PHP_BINDIR') && PHP_BINDIR) {
             return PHP_BINDIR . '/php';
@@ -109,7 +117,7 @@ class DeployApplication
         return 'php';
     }
 
-    private function checkSecurity()
+    private function checkSecurity(): bool
     {
         if ($this->hasAccess === null) {
             $this->hasAccess = false;
@@ -127,11 +135,14 @@ class DeployApplication
         return $this->hasAccess;
     }
 
-    private function exec(array $commands)
+    private function exec(array $commands): string
     {
         $res = "Executing shell commands:\n";
-        foreach ($commands as $command) {
+        foreach ($commands as $key => $command) {
             $response = [];
+            if ($key === 'php') {
+                $command = $this->php() . ' ' . $command;
+            }
             exec($command . ' 2>&1', $response, $error_code);
             if ($error_code > 0 && empty($response)) {
                 $response = array('Error: ' . $error_code);
