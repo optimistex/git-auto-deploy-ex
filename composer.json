@@ -25,7 +25,7 @@
       "shell_lib.php"
     ],
     "psr-4": {
-      "optimistex\\deploy": ""
+      "optimistex\\deploy\\": ""
     }
   },
   "require": {}
