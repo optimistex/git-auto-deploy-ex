@@ -139,16 +139,20 @@ class DeployApplication
     {
         foreach ($commands as $key => $command) {
             $response = [];
-            if ($key === 'php') {
-                $command = $this->php() . ' ' . $command;
+            if (is_array($command)) {
+                $this->exec($command);
+            } else {
+                if ($key === 'php') {
+                    $command = $this->php() . ' ' . $command;
+                }
+                $this->logDated('$ ' . $command);
+                exec($command . ' 2>&1', $response, $error_code);
+                if ($error_code > 0 && empty($response)) {
+                    $response = array('Error: ' . $error_code);
+                }
+                $response = implode("\n", $response);
+                $this->log($response . "\n" . ($response ? "\n" : ''));
             }
-            $this->logDated('$ ' . $command);
-            exec($command . ' 2>&1', $response, $error_code);
-            if ($error_code > 0 && empty($response)) {
-                $response = array('Error: ' . $error_code);
-            }
-            $response = implode("\n", $response);
-            $this->log($response . "\n" . ($response ? "\n" : ''));
         }
     }
 

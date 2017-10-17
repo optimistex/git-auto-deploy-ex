@@ -56,7 +56,11 @@ class DeployApplicationTest extends TestCase
         $app->execute();
         $this->assertFileExists($this->fileName);
         $log = file_get_contents($this->fileName);
-        $this->assertRegExp('/.+ACCESS IS OBTAINED.+\$ git branch.+\$ git pull/si', $log);
+        $this->assertRegExp('/.+ACCESS IS OBTAINED.+' .
+            date('Y.m.d H:i:.+') . '\$ git branch.+' .
+            date('Y.m.d H:i:.+') . '\$ git pull/si',
+            $log
+        );
     }
 
     public function testKeyValidCustom()
@@ -74,9 +78,9 @@ class DeployApplicationTest extends TestCase
         $log = file_get_contents($this->fileName);
         $this->assertRegExp(
             '/.+ACCESS IS OBTAINED.+' .
-            '\$ echo testing_echo.+' .
+            date('Y.m.d H:i:.+') . '\$ echo testing_echo.+' .
             'testing_echo.+' .
-            '\$ .*php -v.+' .
+            date('Y.m.d H:i:.+') . '\$ .*php -v.+' .
             'php ' . PHP_VERSION . '.+/si',
             $log
         );
@@ -97,11 +101,43 @@ class DeployApplicationTest extends TestCase
         $log = file_get_contents($this->fileName);
         $this->assertRegExp(
             '/.+ACCESS IS OBTAINED.+' .
-            '\$ echo testing_echo.+' .
+            date('Y.m.d H:i:.+') . '\$ echo testing_echo.+' .
             'testing_echo.+' .
-            '\$ .*php -v.+' .
+            date('Y.m.d H:i:.+') . '\$ .*php -v.+' .
             'php ' . PHP_VERSION . '.+' .
             '123412.+/si',
+            $log
+        );
+    }
+
+    public function testKeyValidNestedCommands()
+    {
+        $_GET['key'] = '123';
+        $_SERVER['HTTP_HOST'] = 'test.domain';
+        $app = new DeployApplication('123', '.', $this->fileName);
+
+        $this->assertFileNotExists($this->fileName);
+        $app->execute([
+            'echo testing_echo',
+            'php' => '-v && echo 123456',
+            'echo testing_echo',
+            ['php' => '-v && echo 654123'],
+            'echo testing_echo',
+            ['php' => '-v && echo 147896']
+        ]);
+        $this->assertFileExists($this->fileName);
+        $log = file_get_contents($this->fileName);
+        $this->assertRegExp(
+            '/.+ACCESS IS OBTAINED.+'
+
+            . date('Y.m.d H:i:.+') . '\$ echo testing_echo.+testing_echo.+'
+            . date('Y.m.d H:i:.+') . '\$ .*php -v.+php ' . PHP_VERSION . '.+123456.+'
+
+            . date('Y.m.d H:i:.+') . '\$ echo testing_echo.+testing_echo.+'
+            . date('Y.m.d H:i:.+') . '\$ .*php -v.+php ' . PHP_VERSION . '.+654123.+'
+
+            . date('Y.m.d H:i:.+') . '\$ echo testing_echo.+testing_echo.+'
+            . date('Y.m.d H:i:.+') . '\$ .*php -v.+php ' . PHP_VERSION . '.+147896.+/si',
             $log
         );
     }
