@@ -56,7 +56,7 @@ class DeployApplicationTest extends TestCase
         $app->execute();
         $this->assertFileExists($this->fileName);
         $log = file_get_contents($this->fileName);
-        $this->assertRegExp('/.+ACCESS IS OBTAINED.+Executing shell commands.+\$ git branch.+\$ git pull/si', $log);
+        $this->assertRegExp('/.+ACCESS IS OBTAINED.+\$ git branch.+\$ git pull/si', $log);
     }
 
     public function testKeyValidCustom()
@@ -74,7 +74,6 @@ class DeployApplicationTest extends TestCase
         $log = file_get_contents($this->fileName);
         $this->assertRegExp(
             '/.+ACCESS IS OBTAINED.+' .
-            'Executing shell commands.+' .
             '\$ echo testing_echo.+' .
             'testing_echo.+' .
             '\$ .*php -v.+' .
@@ -92,17 +91,17 @@ class DeployApplicationTest extends TestCase
         $this->assertFileNotExists($this->fileName);
         $app->execute([
             'echo testing_echo',
-            'php' => '-v'
+            'php' => '-v && echo 123412'
         ]);
         $this->assertFileExists($this->fileName);
         $log = file_get_contents($this->fileName);
         $this->assertRegExp(
             '/.+ACCESS IS OBTAINED.+' .
-            'Executing shell commands.+' .
             '\$ echo testing_echo.+' .
             'testing_echo.+' .
             '\$ .*php -v.+' .
-            'php ' . PHP_VERSION . '.+/si',
+            'php ' . PHP_VERSION . '.+' .
+            '123412.+/si',
             $log
         );
     }

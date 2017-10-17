@@ -38,15 +38,16 @@ class DeployApplication
      * Path to log file
      * @var string
      */
-    private $log_file;
+    private $logFileName;
 
     /** @var boolean */
     private $hasAccess;
+    private $is_first = true;
 
-    public function __construct($securityKey, $project_root = '.', $log_file = 'git-deploy-log.txt')
+    public function __construct($securityKey, $project_root = '.', $logFileName = 'git-deploy-log.txt')
     {
         $this->securityKey = $securityKey;
-        $this->log_file = getcwd() . '/' . $log_file;
+        $this->logFileName = getcwd() . '/' . $logFileName;
         chdir($project_root);
         putenv('HOME=' . getcwd());
     }
@@ -75,12 +76,12 @@ class DeployApplication
             return;
         }
         if (empty($customCommands)) {
-            $this->log($this->exec([
+            $this->exec([
                 'git branch',
                 'git pull',
-            ]));
+            ]);
         } else {
-            $this->log($this->exec($customCommands));
+            $this->exec($customCommands);
         }
     }
 
@@ -89,15 +90,14 @@ class DeployApplication
         if ($this->checkSecurity()) {
             $this->log('SESSION END');
         }
-        if (file_exists($this->log_file)) {
+        if (file_exists($this->logFileName)) {
             echo '<h1>LOG </h1><pre>';
-            echo file_get_contents($this->log_file);
+            echo file_get_contents($this->logFileName);
             echo '</pre>';
         } else {
             echo 'log not found';
         }
     }
-
 
     /**
      * Returning an absolute path to "php". It is useful, cause just "php" not working!
@@ -123,10 +123,10 @@ class DeployApplication
             $this->hasAccess = false;
             if (isset($_GET['key']) && !empty($_GET['key'])) {
                 if ($this->securityKey === $_GET['key']) {
-                    $this->log('ACCESS IS OBTAINED');
+                    $this->logDated('ACCESS IS OBTAINED');
                     $this->hasAccess = true;
                 } else {
-                    $this->log(
+                    $this->logDated(
                         'DENY << ://' . ($_SERVER['HTTP_HOST'] ?? 'unknown-domain') . ($_SERVER['REQUEST_URI'] ?? '')
                     );
                 }
@@ -135,38 +135,40 @@ class DeployApplication
         return $this->hasAccess;
     }
 
-    private function exec(array $commands): string
+    private function exec(array $commands)
     {
-        $res = "Executing shell commands:\n";
         foreach ($commands as $key => $command) {
             $response = [];
             if ($key === 'php') {
                 $command = $this->php() . ' ' . $command;
             }
+            $this->logDated('$ ' . $command);
             exec($command . ' 2>&1', $response, $error_code);
             if ($error_code > 0 && empty($response)) {
                 $response = array('Error: ' . $error_code);
             }
             $response = implode("\n", $response);
-            $res .= "$ $command \n{$response}\n" . ($response ? "\n" : '');
+            $this->log($response . "\n" . ($response ? "\n" : ''));
         }
-        return $res;
     }
 
-    private function log($message)
+    private function logDated(string $message)
     {
-        if (empty($this->log_file)) {
+        if ($this->is_first) {
+            $this->log("\n==============================\n");
+            $this->is_first = false;
+        }
+
+        $this->log(date('Y.m.d H:i:s') . "\t" . $message . "\n");
+    }
+
+    private function log(string $message)
+    {
+        if (empty($this->logFileName)) {
             return;
         }
 
-        static $is_first = true;
-        if ($is_first) {
-            file_put_contents($this->log_file, "\n==============================\n", FILE_APPEND | LOCK_EX);
-            $is_first = false;
-        }
-
-        $datetime = date('Y.m.d H:i:s');
-        file_put_contents($this->log_file, $datetime . "\t" . $message . "\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($this->logFileName, $message, FILE_APPEND | LOCK_EX);
         flush();
     }
 }
