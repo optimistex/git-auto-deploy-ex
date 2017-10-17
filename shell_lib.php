@@ -67,7 +67,7 @@ class ShellHelper
  */
 class LogHelper
 {
-    static $log_file;
+    public static $log_file;
 
     public static function init($log_file)
     {
@@ -119,7 +119,7 @@ class DeployApplication
     /** @var boolean */
     private $hasAccess;
 
-    function __construct($securityKey, $project_root = '.', $log_file = 'git-deploy-log.txt')
+    public function __construct($securityKey, $project_root = '.', $log_file = 'git-deploy-log.txt')
     {
         $this->securityKey = $securityKey;
         $this->log_file = getcwd() . '/' . $log_file;
@@ -184,7 +184,9 @@ class DeployApplication
                     LogHelper::log('ACCESS IS OBTAINED');
                     $this->hasAccess = true;
                 } else {
-                    LogHelper::log('DENY << ://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+                    LogHelper::log(
+                        'DENY << ://' . ($_SERVER['HTTP_HOST'] ?? 'unknown-domain') . ($_SERVER['REQUEST_URI'] ?? '')
+                    );
                 }
             }
         }
