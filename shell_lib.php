@@ -19,6 +19,7 @@ namespace optimistex\deploy;
  *    'ls'
  * ]);
  * ```
+ * @deprecated
  */
 class ShellHelper
 {
@@ -64,6 +65,7 @@ class ShellHelper
  * LogHelper::init('log_file.txt');
  * LogHelper::log('message for logging');
  * ```
+ * @deprecated
  */
 class LogHelper
 {
@@ -89,107 +91,5 @@ class LogHelper
         $datetime = date('Y.m.d H:i:s');
         file_put_contents(static::$log_file, $datetime . "\t" . $message . "\n", FILE_APPEND | LOCK_EX);
         flush();
-    }
-}
-
-/**
- * Main class for deploying
- * Example for use it:
- *
- * ```php
- * (new DeployApplication('security_key'))->run();
- * ```
- *
- * @package optimistex\deploy
- */
-class DeployApplication
-{
-    /**
-     * Private key for protection
-     * @var string
-     */
-    private $securityKey;
-
-    /**
-     * Path to log file
-     * @var string
-     */
-    private $log_file;
-
-    /** @var boolean */
-    private $hasAccess;
-
-    public function __construct($securityKey, $project_root = '.', $log_file = 'git-deploy-log.txt')
-    {
-        $this->securityKey = $securityKey;
-        $this->log_file = getcwd() . '/' . $log_file;
-        chdir($project_root);
-        putenv("HOME=" . getcwd());
-        LogHelper::init($this->log_file);
-    }
-
-    /**
-     * Fastest executing for typical cases
-     * @param array $customCommands
-     */
-    public function run(array $customCommands = [])
-    {
-        $this->begin();
-        $this->execute($customCommands);
-        $this->end();
-    }
-
-    public function begin()
-    {
-        if ($this->checkSecurity()) {
-            LogHelper::log('SESSION START');
-        }
-    }
-
-    public function execute(array $customCommands = [])
-    {
-        if (!$this->checkSecurity()) {
-            return;
-        }
-        if (empty($customCommands)) {
-            LogHelper::log(ShellHelper::exec([
-                'git branch',
-                'git pull',
-            ]));
-        } else {
-            LogHelper::log(ShellHelper::exec($customCommands));
-        }
-    }
-
-    public function end()
-    {
-        if ($this->checkSecurity()) {
-            LogHelper::log('SESSION END');
-        }
-        if (file_exists($this->log_file)) {
-            echo '<h1>LOG </h1><pre>';
-            echo file_get_contents($this->log_file);
-            echo '</pre>';
-        } else {
-            echo 'log not found';
-        }
-    }
-
-    private function checkSecurity()
-    {
-        if ($this->hasAccess === null) {
-            $this->hasAccess = false;
-            if (isset($_GET['key']) && !empty($_GET['key'])) {
-                if ($this->securityKey === $_GET['key']) {
-                    LogHelper::log('ACCESS IS OBTAINED');
-                    $this->hasAccess = true;
-                } else {
-                    LogHelper::log(
-                        'DENY << ://' . ($_SERVER['HTTP_HOST'] ?? 'unknown-domain') . ($_SERVER['REQUEST_URI'] ?? '')
-                    );
-                }
-            }
-        }
-        return $this->hasAccess;
     }
 }

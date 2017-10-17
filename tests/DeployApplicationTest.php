@@ -46,7 +46,7 @@ class DeployApplicationTest extends TestCase
         $this->assertRegExp('/====+.+DENY.+test.domain/s', $log);
     }
 
-    public function testKeyValid1()
+    public function testKeyValidDefault()
     {
         $_GET['key'] = '123';
         $_SERVER['HTTP_HOST'] = 'test.domain';
@@ -59,16 +59,27 @@ class DeployApplicationTest extends TestCase
         $this->assertRegExp('/.+ACCESS IS OBTAINED.+Executing shell commands.+\$ git branch.+\$ git pull/si', $log);
     }
 
-    public function testKeyValid2()
+    public function testKeyValidCustom()
     {
         $_GET['key'] = '123';
         $_SERVER['HTTP_HOST'] = 'test.domain';
         $app = new DeployApplication('123', '.', $this->fileName);
 
         $this->assertFileNotExists($this->fileName);
-        $app->execute(['echo testing_echo']);
+        $app->execute([
+            'echo testing_echo',
+            $app->php() . ' -v'
+        ]);
         $this->assertFileExists($this->fileName);
         $log = file_get_contents($this->fileName);
-        $this->assertRegExp('/.+ACCESS IS OBTAINED.+Executing shell commands.+\$ echo testing_echo.+testing_echo/si', $log);
+        $this->assertRegExp(
+            '/.+ACCESS IS OBTAINED.+' .
+            'Executing shell commands.+' .
+            '\$ echo testing_echo.+' .
+            'testing_echo.+' .
+            '\$ .*php -v.+' .
+            'php ' . PHP_VERSION . '.+/si',
+            $log
+        );
     }
 }
