@@ -21,7 +21,7 @@ It does auto deploy your site to hosting
     <?php
     require_once 'vendor/autoload.php';
     // Add secret code in the first parameter for protection
-    \optimistex\deploy\GitHelper::run('ytJHvMHFdTYUryDhmJkjFjFiYk');
+    (new \optimistex\deploy\DeployApplication('ytJHvMHFdTYUryDhmJkjFjFiYk'))->run();
     ```
 
 3. Configure WebHook for send request to:
@@ -39,19 +39,17 @@ For extended deployment make the file ``deploy.php`` with code:
 ```php
 <?php
 
-use optimistex\deploy\ShellHelper;
 use optimistex\deploy\DeployApplication;
 
 require_once 'vendor/autoload.php';
 
-$app = new DeployApplication('security_key');
-$app->begin();
-$app->execute([ // executing custom commands
-    'git branch',
-    'git pull',
-    ShellHelper::php() . ' composer.phar install', // install packages
+(new DeployApplication('security_key'))->run([  // executing custom commands
+    'git branch',                               // equal: $ git branch
+    'git pull',                                 // equal: $ git pull
+    'php' => 'composer.phar install',           // equal: $ php composer.phar install
+    ['php' => 'yii migrate --interactive=0'],   // equal: $ php yii migrate --interactive=0
 ]);
-$app->end();
 ```
 
-``ShellHelper::php()`` - equal ``php``, but used becouse just "php" not working! 
+That ``'php' => 'composer.phar install'`` used for expanding "php" to absolute path. 
+There is required an absolute path because just "php" don't working by relative path!
