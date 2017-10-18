@@ -29,5 +29,7 @@
       "dev-master": "1.2.x-dev"
     }
   },
-  "require": {}
+  "require": {
+    "php": "^7.0"
+  }
 }
