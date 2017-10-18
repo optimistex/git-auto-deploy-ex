@@ -1,6 +1,6 @@
 {
   "name": "optimistex/git-auto-deploy-ex",
-  "version": "1.1.0.5",
+  "version": "1.1.0.6",
   "type": "library",
   "description": "The little project for auto-deploying projects to a hosting",
   "keywords": [
@@ -26,6 +26,11 @@
     ],
     "psr-4": {
       "optimistex\\deploy\\": ""
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.1.x-dev"
     }
   },
   "require": {}
