@@ -23,6 +23,11 @@ namespace optimistex\deploy;
  */
 class ShellHelper
 {
+    /**
+     * @param array $commands
+     * @return string
+     * @deprecated
+     */
     public static function exec(array $commands)
     {
         $res = "Executing shell commands:\n";
@@ -73,11 +78,19 @@ class LogHelper
 {
     public static $log_file;
 
+    /**
+     * @param $log_file
+     * @deprecated
+     */
     public static function init($log_file)
     {
         static::$log_file = $log_file;
     }
 
+    /**
+     * @param $message
+     * @deprecated
+     */
     public static function log($message)
     {
         if (empty(static::$log_file)) {
