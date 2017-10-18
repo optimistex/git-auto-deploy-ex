@@ -19,10 +19,15 @@ namespace optimistex\deploy;
  *    'ls'
  * ]);
  * ```
- * @deprecated
+ * @deprecated will be deleted in v1.2
  */
 class ShellHelper
 {
+    /**
+     * @param array $commands
+     * @return string
+     * @deprecated
+     */
     public static function exec(array $commands)
     {
         $res = "Executing shell commands:\n";
@@ -41,18 +46,20 @@ class ShellHelper
     /**
      * Returning an absolute path to "php". It is useful, cause just "php" not working!
      * @return string
+     * @deprecated
      */
     public static function php()
     {
         if (defined('PHP_BINDIR') && PHP_BINDIR) {
             return PHP_BINDIR . '/php';
-        } else if (defined('PHP_BINARY') && PHP_BINARY) {
-            return PHP_BINARY . '/php';
-        } else if (defined('PHP_BINDER') && PHP_BINDER) {
-            return PHP_BINDER . '/php';
-        } else {
-            return 'php';
         }
+        if (defined('PHP_BINARY') && PHP_BINARY) {
+            return PHP_BINARY . '/php';
+        }
+        if (defined('PHP_BINDER') && PHP_BINDER) {
+            return PHP_BINDER . '/php';
+        }
+        return 'php';
     }
 }
 
@@ -65,17 +72,25 @@ class ShellHelper
  * LogHelper::init('log_file.txt');
  * LogHelper::log('message for logging');
  * ```
- * @deprecated
+ * @deprecated will be deleted in v1.2
  */
 class LogHelper
 {
     public static $log_file;
 
+    /**
+     * @param $log_file
+     * @deprecated
+     */
     public static function init($log_file)
     {
         static::$log_file = $log_file;
     }
 
+    /**
+     * @param $message
+     * @deprecated
+     */
     public static function log($message)
     {
         if (empty(static::$log_file)) {
