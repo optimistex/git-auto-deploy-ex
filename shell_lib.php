@@ -19,7 +19,7 @@ namespace optimistex\deploy;
  *    'ls'
  * ]);
  * ```
- * @deprecated
+ * @deprecated will be deleted in v1.2
  */
 class ShellHelper
 {
@@ -72,7 +72,7 @@ class ShellHelper
  * LogHelper::init('log_file.txt');
  * LogHelper::log('message for logging');
  * ```
- * @deprecated
+ * @deprecated will be deleted in v1.2
  */
 class LogHelper
 {
