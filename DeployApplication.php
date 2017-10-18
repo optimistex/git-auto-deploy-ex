@@ -66,7 +66,7 @@ class DeployApplication
     public function begin()
     {
         if ($this->checkSecurity()) {
-            $this->log('SESSION START');
+            $this->logDated('SESSION START');
         }
     }
 
@@ -85,7 +85,7 @@ class DeployApplication
     public function end()
     {
         if ($this->checkSecurity()) {
-            $this->log('SESSION END');
+            $this->logDated('SESSION END');
         }
         if (file_exists($this->logFileName)) {
             echo '<h1>LOG </h1><pre>';
