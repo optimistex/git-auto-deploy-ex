@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-phpunit --bootstrap shell_lib.php tests/*
+phpunit --bootstrap DeployApplication.php tests/*
