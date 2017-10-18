@@ -28,7 +28,7 @@ It does auto deploy your site to hosting
 
         http://your.domain/deploy.php?key=ytJHvMHFdTYUryDhmJkjFjFiYk
         
-4. Visit page ``http://your.domain/deploy.php`` for check log history        
+4. Visit page ``http://your.domain/deploy.php`` to check log history        
         
 Do not forget to change the secret code ``ytJHvMHFdTYUryDhmJkjFjFiYk``
          

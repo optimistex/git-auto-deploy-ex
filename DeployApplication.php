@@ -10,7 +10,7 @@ namespace optimistex\deploy;
 
 /**
  * Main class for deploying
- * Example for use it:
+ * Usage example:
  *
  * ```php
  * // Run default commands
@@ -42,13 +42,24 @@ class DeployApplication
 
     /** @var boolean */
     private $hasAccess;
-    private $is_first = true;
 
-    public function __construct($securityKey, $project_root = '.', $logFileName = 'git-deploy-log.txt')
+    /** @var boolean */
+    private $isFirstLogging = true;
+
+    /** @var boolean */
+    private $logError = false;
+
+    /**
+     * DeployApplication constructor.
+     * @param string $securityKey string key for protect application
+     * @param string $workPath set working path for executing all commands
+     * @param string $logFileName path to a log file
+     */
+    public function __construct(string $securityKey, string $workPath = '.', string $logFileName = 'git-deploy-log.txt')
     {
         $this->securityKey = $securityKey;
         $this->logFileName = getcwd() . '/' . $logFileName;
-        chdir($project_root);
+        chdir($workPath);
         putenv('HOME=' . getcwd());
     }
 
@@ -63,6 +74,9 @@ class DeployApplication
         $this->end();
     }
 
+    /**
+     * Begin log file
+     */
     public function begin()
     {
         if ($this->checkSecurity()) {
@@ -70,6 +84,10 @@ class DeployApplication
         }
     }
 
+    /**
+     * Executing command like a command lines
+     * @param array $customCommands you can execute custom commands
+     */
     public function execute(array $customCommands = [])
     {
         if (!$this->checkSecurity()) {
@@ -82,17 +100,23 @@ class DeployApplication
         }
     }
 
+    /**
+     * Finish logging and output all content from the log file
+     */
     public function end()
     {
         if ($this->checkSecurity()) {
             $this->logDated('SESSION END');
         }
-        if (file_exists($this->logFileName)) {
+
+        if ($this->logError) {
+            echo 'Write log failed';
+        } else if (file_exists($this->logFileName)) {
             echo '<h1>LOG </h1><pre>';
             echo file_get_contents($this->logFileName);
             echo '</pre>';
         } else {
-            echo 'log not found';
+            echo 'A log file not found';
         }
     }
 
@@ -155,9 +179,9 @@ class DeployApplication
 
     private function logDated(string $message)
     {
-        if ($this->is_first) {
+        if ($this->isFirstLogging) {
             $this->log("\n==============================\n");
-            $this->is_first = false;
+            $this->isFirstLogging = false;
         }
 
         $this->log(date('Y.m.d H:i:s') . "\t" . $message . "\n");
@@ -168,8 +192,10 @@ class DeployApplication
         if (empty($this->logFileName)) {
             return;
         }
-
-        file_put_contents($this->logFileName, $message, FILE_APPEND | LOCK_EX);
-        flush();
+        if (file_put_contents($this->logFileName, $message, FILE_APPEND | LOCK_EX) === false) {
+            $this->logError = true;
+        } else {
+            flush();
+        }
     }
 }
