@@ -41,18 +41,20 @@ class ShellHelper
     /**
      * Returning an absolute path to "php". It is useful, cause just "php" not working!
      * @return string
+     * @deprecated
      */
     public static function php()
     {
         if (defined('PHP_BINDIR') && PHP_BINDIR) {
             return PHP_BINDIR . '/php';
-        } else if (defined('PHP_BINARY') && PHP_BINARY) {
-            return PHP_BINARY . '/php';
-        } else if (defined('PHP_BINDER') && PHP_BINDER) {
-            return PHP_BINDER . '/php';
-        } else {
-            return 'php';
         }
+        if (defined('PHP_BINARY') && PHP_BINARY) {
+            return PHP_BINARY . '/php';
+        }
+        if (defined('PHP_BINDER') && PHP_BINDER) {
+            return PHP_BINDER . '/php';
+        }
+        return 'php';
     }
 }
 
