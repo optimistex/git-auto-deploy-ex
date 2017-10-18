@@ -76,10 +76,7 @@ class DeployApplication
             return;
         }
         if (empty($customCommands)) {
-            $this->exec([
-                'git branch',
-                'git pull',
-            ]);
+            $this->exec(['git branch', 'git pull && git log -1']);
         } else {
             $this->exec($customCommands);
         }
