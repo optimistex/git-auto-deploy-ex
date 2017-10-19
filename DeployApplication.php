@@ -55,7 +55,7 @@ class DeployApplication
      * @param string $workPath set working path for executing all commands
      * @param string $logFileName path to a log file
      */
-    public function __construct(string $securityKey, string $workPath = '.', string $logFileName = 'git-deploy-log.txt')
+    public function __construct($securityKey, $workPath = '.', $logFileName = 'git-deploy-log.txt')
     {
         $this->securityKey = $securityKey;
         $this->logFileName = getcwd() . '/' . $logFileName;
@@ -124,7 +124,7 @@ class DeployApplication
      * Returning an absolute path to "php". It is useful, cause just "php" not working!
      * @return string
      */
-    public function php(): string
+    public function php()
     {
         if (defined('PHP_BINDIR') && PHP_BINDIR) {
             return PHP_BINDIR . '/php';
@@ -138,7 +138,7 @@ class DeployApplication
         return 'php';
     }
 
-    private function checkSecurity(): bool
+    private function checkSecurity()
     {
         if ($this->hasAccess === null) {
             $this->hasAccess = false;
@@ -148,7 +148,9 @@ class DeployApplication
                     $this->hasAccess = true;
                 } else {
                     $this->logDated(
-                        'DENY << ://' . ($_SERVER['HTTP_HOST'] ?? 'unknown-domain') . ($_SERVER['REQUEST_URI'] ?? '')
+                        'DENY << ://'
+                        . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'unknown-domain')
+                        . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '')
                     );
                 }
             }
@@ -177,7 +179,7 @@ class DeployApplication
         }
     }
 
-    private function logDated(string $message)
+    private function logDated($message)
     {
         if ($this->isFirstLogging) {
             $this->log("\n==============================\n");
@@ -187,7 +189,7 @@ class DeployApplication
         $this->log(date('Y.m.d H:i:s') . "\t" . $message . "\n");
     }
 
-    private function log(string $message)
+    private function log($message)
     {
         if (empty($this->logFileName)) {
             return;
