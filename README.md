@@ -51,5 +51,5 @@ require_once 'vendor/autoload.php';
 ]);
 ```
 
-That ``'php' => 'composer.phar install'`` used for expanding "php" to absolute path. 
-There is required an absolute path because just "php" don't working by relative path!
+The line ``'php' => 'composer.phar install'`` is used for expanding "php" to absolute path. 
+An absolute path is required because "php" doesn't work using relative path!
