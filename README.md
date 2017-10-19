@@ -5,7 +5,7 @@ It does auto deploy your site to hosting
 
 # Requirements
 
-1. PHP 7 server 
+1. PHP 5.4 or higher 
 2. Access to perform **shell** commands
 3. Installed **GIT** on target hosting
 
