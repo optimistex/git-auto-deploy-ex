@@ -4,8 +4,8 @@ Auto deploy project through GIT
 It does auto deploy your site to hosting
 
 - [Requirements](#requirements)
-- [Start to use through composer](#start-to-use-through-composer)
-- [Start to use through npm](#start-to-use-through-npm)
+- [Start to use through COMPOSER](#start-to-use-through-composer)
+- [Start to use through NPM](#start-to-use-through-npm)
 - [Extended deploy with custom commands](#extended-deploy-with-custom-commands)
 
 # Requirements
@@ -14,7 +14,7 @@ It does auto deploy your site to hosting
 2. Access to perform **shell** commands
 3. Installed **GIT** on target hosting
 
-# Start to use through composer
+# Start to use through COMPOSER
 
 The main using through composer.
 
@@ -39,7 +39,7 @@ The main using through composer.
         
 Do not forget to change the secret code ``ytJHvMHFdTYUryDhmJkjFjFiYk``
          
-# Start to use through npm
+# Start to use through NPM
          
 If you making SPA and the files is located on a php hosting, then you can does auto deployment through the package.
          
