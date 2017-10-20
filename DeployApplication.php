@@ -165,8 +165,9 @@ class DeployApplication
             if (is_array($command)) {
                 $this->exec($command);
             } else {
-                if ($key === 'php') {
-                    $command = $this->php() . ' ' . $command;
+                if (is_string($key)) {
+                    $this->extendEnvironmentPath($key);
+                    $command = $key . ' ' . $command;
                 }
                 $this->logDated('$ ' . $command);
                 exec($command . ' 2>&1', $response, $error_code);
@@ -176,6 +177,26 @@ class DeployApplication
                 $response = implode("\n", $response);
                 $this->log($response . "\n" . ($response ? "\n" : ''));
             }
+        }
+    }
+
+    private function extendEnvironmentPath($command)
+    {
+        $extPath = '';
+        if ($command === 'php') {
+            $extPath = ':' . dirname($this->php());
+        } else {
+            exec('dirname $(whereis ' . $command . ') 2>&1', $response, $error_code);
+            if (is_array($response)) {
+                foreach (array_unique($response) as $path) {
+                    if ($path !== '.') {
+                        $extPath .= ':' . $path;
+                    }
+                }
+            }
+        }
+        if (!empty($extPath)) {
+            putenv('PATH=' . getenv('PATH') . $extPath);
         }
     }
 
