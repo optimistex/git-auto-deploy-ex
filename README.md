@@ -3,6 +3,11 @@ Auto deploy project through GIT
 
 It does auto deploy your site to hosting
 
+- [Requirements](#requirements)
+- [Start to use through composer](#start-to-use-through-composer)
+- [Start to use through npm](#start-to-use-through-npm)
+- [Extended deploy with custom commands](#extended-deploy-with-custom-commands)
+
 # Requirements
 
 1. PHP 5.4 or higher 
@@ -57,7 +62,7 @@ If you making SPA and the files is located on a php hosting, then you can does a
         
 4. Visit page ``http://your.domain/deploy.php`` to check log history                 
 
-### Extended deploy with custom commands
+# Extended deploy with custom commands
 
 For extended deployment make the file ``deploy.php`` with code:
 

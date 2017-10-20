@@ -1,6 +1,6 @@
 {
   "name": "optimistex/git-auto-deploy-ex",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "type": "library",
   "description": "The little project for auto-deploying projects to a hosting",
   "keywords": [
