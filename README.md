@@ -9,7 +9,9 @@ It does auto deploy your site to hosting
 2. Access to perform **shell** commands
 3. Installed **GIT** on target hosting
 
-# Start to use
+# Start to use through composer
+
+The main using through composer.
 
 1. Install package:
     ```php
@@ -32,6 +34,29 @@ It does auto deploy your site to hosting
         
 Do not forget to change the secret code ``ytJHvMHFdTYUryDhmJkjFjFiYk``
          
+# Start to use through npm
+         
+If you making SPA and the files is located on a php hosting, then you can does auto deployment through the package.
+         
+1. Install package:
+    ```bash
+    $ npm i git-auto-deploy-ex
+    ```
+         
+2. Make file ``deploy.php`` with content:
+    ```php
+    <?php
+    require_once '\path\to\DeployApplication';
+    // Add secret code in the first parameter for protection
+    (new \optimistex\deploy\DeployApplication('ytJHvMHFdTYUryDhmJkjFjFiYk'))->run();
+    ```
+
+3. Configure WebHook for send request to:
+
+        http://your.domain/deploy.php?key=ytJHvMHFdTYUryDhmJkjFjFiYk
+        
+4. Visit page ``http://your.domain/deploy.php`` to check log history                 
+
 ### Extended deploy with custom commands
 
 For extended deployment make the file ``deploy.php`` with code:
