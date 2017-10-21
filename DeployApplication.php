@@ -117,7 +117,7 @@ class DeployApplication
     public function end()
     {
         if ($this->checkSecurity()) {
-            $this->logDated('SESSION END');
+            $this->logDated('SESSION END ' . ($this->hasExecError ? 'WITH ERROR' : 'SUCCESSFUL'));
         }
 
         if ($this->logError) {
