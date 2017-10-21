@@ -176,7 +176,9 @@ class DeployApplication
             if (is_array($command)) {
                 $this->exec($command);
             } else {
-                if (is_string($key)) {
+                if ($key === 'php') {
+                    $command = $this->php() . ' ' . $command;
+                } else if (is_string($key)) {
                     $this->extendEnvironmentPath($key);
                     $command = $key . ' ' . $command;
                 }
