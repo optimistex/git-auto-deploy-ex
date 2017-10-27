@@ -106,8 +106,8 @@ class DeployApplication
         if (empty($customCommands)) {
             $this->exec([
                 'git branch && git fetch',
-                'git log HEAD..origin --pretty=format:"%h - %an:  %s"',
-                'git pull'
+                'git log @{u} ^HEAD --pretty=format:"%h - %an:  %s"',
+                'git pull',
             ]);
         } else {
             $this->exec($customCommands);
