@@ -104,7 +104,11 @@ class DeployApplication
         }
         $this->hasExecError = false;
         if (empty($customCommands)) {
-            $this->exec(['git branch', 'git pull']); // git pull && git log -1
+            $this->exec([
+                'git branch && git fetch',
+                'git log HEAD..origin --pretty=format:"%h - %an:  %s"',
+                'git pull'
+            ]);
         } else {
             $this->exec($customCommands);
         }
