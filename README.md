@@ -83,3 +83,7 @@ require_once 'vendor/autoload.php';
 
 The line ``'php' => 'composer.phar install'`` is used for expanding "php" to absolute path. 
 An absolute path is required because "php" doesn't work using relative path!
+
+# Contribute
+
+For running tests just run ``$ make``
